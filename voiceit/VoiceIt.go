@@ -11,13 +11,13 @@ type VoiceIt struct {
     devID string
 }
 
-func new(developerID string) *VoiceIt{
+func New(developerID string) *VoiceIt{
     return &VoiceIt{
         devID: developerID,
     }
 }
 
-func (v *VoiceIt) createUser(mail string, passwd string, firstName string, lastName string, phones ...string) string{
+func (v *VoiceIt) CreateUser(mail string, passwd string, firstName string, lastName string, phones ...string) string{
     hasher := sha256.New()
     p1,p2,p3 := "", "", ""
     if len(phones) > 0 {
@@ -62,7 +62,7 @@ func (v *VoiceIt) createUser(mail string, passwd string, firstName string, lastN
     return result
 }
 
-func (v *VoiceIt) getUser(mail string, passwd string) string{
+func (v *VoiceIt) GetUser(mail string, passwd string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
@@ -86,7 +86,7 @@ func (v *VoiceIt) getUser(mail string, passwd string) string{
     return result
 }
 
-func (v *VoiceIt) setUser(mail string, passwd string, firstName string, lastName string, phones ...string) string{
+func (v *VoiceIt) SetUser(mail string, passwd string, firstName string, lastName string, phones ...string) string{
     hasher := sha256.New()
     p1,p2,p3 := "", "", ""
     if len(phones) > 0 {
@@ -132,7 +132,7 @@ func (v *VoiceIt) setUser(mail string, passwd string, firstName string, lastName
 
 }
 
-func (v *VoiceIt) deleteUser(mail string, passwd string) string{
+func (v *VoiceIt) DeleteUser(mail string, passwd string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
@@ -157,7 +157,7 @@ func (v *VoiceIt) deleteUser(mail string, passwd string) string{
 
 }
 
-func (v *VoiceIt) createEnrollment(mail string, passwd string, pathToEnrollmentWav string, contentLanguage ... string) string {
+func (v *VoiceIt) CreateEnrollment(mail string, passwd string, pathToEnrollmentWav string, contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -192,7 +192,7 @@ func (v *VoiceIt) createEnrollment(mail string, passwd string, pathToEnrollmentW
     return result
 }
 
-func (v *VoiceIt) createEnrollmentByWavURL(mail string, passwd string, urlToEnrollmentWav string, contentLanguage ... string) string {
+func (v *VoiceIt) CreateEnrollmentByWavURL(mail string, passwd string, urlToEnrollmentWav string, contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -224,7 +224,7 @@ func (v *VoiceIt) createEnrollmentByWavURL(mail string, passwd string, urlToEnro
     return result
 }
 
-func (v *VoiceIt) getEnrollments(mail string, passwd string) string{
+func (v *VoiceIt) GetEnrollments(mail string, passwd string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
@@ -248,7 +248,7 @@ func (v *VoiceIt) getEnrollments(mail string, passwd string) string{
     return result
 }
 
-func (v *VoiceIt) deleteEnrollment(mail string, passwd string, enrollmentId string) string{
+func (v *VoiceIt) DeleteEnrollment(mail string, passwd string, enrollmentId string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
@@ -273,7 +273,7 @@ func (v *VoiceIt) deleteEnrollment(mail string, passwd string, enrollmentId stri
 
 }
 
-func (v *VoiceIt) authentication(mail string, passwd string, pathToAuthenticationWav string, confidence string,contentLanguage ... string) string {
+func (v *VoiceIt) Authentication(mail string, passwd string, pathToAuthenticationWav string, confidence string,contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -309,7 +309,7 @@ func (v *VoiceIt) authentication(mail string, passwd string, pathToAuthenticatio
     return result
 }
 
-func (v *VoiceIt) authenticationByWavURL(mail string, passwd string, urlToAuthenticationWav string, confidence string, contentLanguage ... string) string {
+func (v *VoiceIt) AuthenticationByWavURL(mail string, passwd string, urlToAuthenticationWav string, confidence string, contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
