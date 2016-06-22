@@ -1,4 +1,4 @@
-package voiceit-go
+package voiceit
 import "fmt"
 import "net/http"
 import "crypto/sha256"
