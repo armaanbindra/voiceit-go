@@ -16,4 +16,4 @@ import "github.com/voiceittech/voiceit-go/voiceit"
 myVoiceIt := voiceit.New("1d6361f81f3047ca8b0c0332ac0fb17d")
 ```
 
-Finally use all other API Calls as documented on the [VoiceIt API Documentation](https://siv.voiceprintportal.com/getstarted.jsp#apidocs) page.
+Finally use all other API Calls as documented on the [VoiceIt API Documentation](https://siv.voiceprintportal.com/apidocs.jsp) page.
