@@ -17,37 +17,16 @@ func New(developerID string) *VoiceIt{
     }
 }
 
-func (v *VoiceIt) CreateUser(mail string, passwd string, firstName string, lastName string, phones ...string) string{
+func (v *VoiceIt) CreateUser(userId string, passwd string) string{
     hasher := sha256.New()
-    p1,p2,p3 := "", "", ""
-    if len(phones) > 0 {
-        p1 = phones[0]
-    } else {
-        p1 =""
-    }
-    if len(phones) > 1 {
-        p2 = phones[1]
-    } else{
-        p2 =""
-    }
-    if len(phones) > 2 {
-        p3 = phones[2]
-    } else{
-        p3 =""
-    }
     client := &http.Client{}
     io.WriteString(hasher, passwd)
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("POST", "https://siv.voiceprintportal.com/sivservice/api/users", nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
-    req.Header.Add("VsitFirstName" , firstName)
-    req.Header.Add("VsitLastName" , lastName)
-    req.Header.Add("VsitPhone1" , p1)
-    req.Header.Add("VsitPhone2" , p2)
-    req.Header.Add("VsitPhone3" , p3)
     req.Header.Add("PlatformID" , "24")
     resp, err := client.Do(req)
     if err != nil {
@@ -62,14 +41,14 @@ func (v *VoiceIt) CreateUser(mail string, passwd string, firstName string, lastN
     return result
 }
 
-func (v *VoiceIt) GetUser(mail string, passwd string) string{
+func (v *VoiceIt) GetUser(userId string, passwd string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("GET", "https://siv.voiceprintportal.com/sivservice/api/users", nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("PlatformID" , "24")
@@ -86,60 +65,14 @@ func (v *VoiceIt) GetUser(mail string, passwd string) string{
     return result
 }
 
-func (v *VoiceIt) SetUser(mail string, passwd string, firstName string, lastName string, phones ...string) string{
-    hasher := sha256.New()
-    p1,p2,p3 := "", "", ""
-    if len(phones) > 0 {
-        p1 = phones[0]
-    } else {
-        p1 =""
-    }
-    if len(phones) > 1 {
-        p2 = phones[1]
-    } else{
-        p2 =""
-    }
-    if len(phones) > 2 {
-        p3 = phones[2]
-    } else{
-        p3 =""
-    }
-    client := &http.Client{}
-    io.WriteString(hasher, passwd)
-    shapass := hex.EncodeToString(hasher.Sum(nil))
-    req, err := http.NewRequest("PUT", "https://siv.voiceprintportal.com/sivservice/api/users", nil)
-    req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
-    req.Header.Add("VsitPassword" , shapass)
-    req.Header.Add("VsitDeveloperId" , v.devID)
-    req.Header.Add("VsitFirstName" , firstName)
-    req.Header.Add("VsitLastName" , lastName)
-    req.Header.Add("VsitPhone1" , p1)
-    req.Header.Add("VsitPhone2" , p2)
-    req.Header.Add("VsitPhone3" , p3)
-    req.Header.Add("PlatformID" , "24")
-    resp, err := client.Do(req)
-    if err != nil {
-        fmt.Printf("%s\n", "ERROR!")
-    }
-    defer resp.Body.Close()
-    reply, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        fmt.Printf("%s\n", "ERROR!")
-    }
-    result := string(reply[:len(reply)])
-    return result
-
-}
-
-func (v *VoiceIt) DeleteUser(mail string, passwd string) string{
+func (v *VoiceIt) DeleteUser(userId string, passwd string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("DELETE", "https://siv.voiceprintportal.com/sivservice/api/users", nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("PlatformID" , "24")
@@ -157,7 +90,7 @@ func (v *VoiceIt) DeleteUser(mail string, passwd string) string{
 
 }
 
-func (v *VoiceIt) CreateEnrollment(mail string, passwd string, pathToEnrollmentWav string, contentLanguage ... string) string {
+func (v *VoiceIt) CreateEnrollment(userId string, passwd string, pathToEnrollmentWav string, contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -174,7 +107,7 @@ func (v *VoiceIt) CreateEnrollment(mail string, passwd string, pathToEnrollmentW
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("POST", "https://siv.voiceprintportal.com/sivservice/api/enrollments", bytes.NewReader(wavData))
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("ContentLanguage" , contentLang)
@@ -192,7 +125,7 @@ func (v *VoiceIt) CreateEnrollment(mail string, passwd string, pathToEnrollmentW
     return result
 }
 
-func (v *VoiceIt) CreateEnrollmentByWavURL(mail string, passwd string, urlToEnrollmentWav string, contentLanguage ... string) string {
+func (v *VoiceIt) CreateEnrollmentByWavURL(userId string, passwd string, urlToEnrollmentWav string, contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -205,7 +138,7 @@ func (v *VoiceIt) CreateEnrollmentByWavURL(mail string, passwd string, urlToEnro
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("POST", "https://siv.voiceprintportal.com/sivservice/api/enrollments/bywavurl", nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("VsitwavURL", urlToEnrollmentWav)
@@ -224,14 +157,14 @@ func (v *VoiceIt) CreateEnrollmentByWavURL(mail string, passwd string, urlToEnro
     return result
 }
 
-func (v *VoiceIt) GetEnrollments(mail string, passwd string) string{
+func (v *VoiceIt) GetEnrollments(userId string, passwd string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("GET", "https://siv.voiceprintportal.com/sivservice/api/enrollments", nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("PlatformID" , "24")
@@ -248,14 +181,14 @@ func (v *VoiceIt) GetEnrollments(mail string, passwd string) string{
     return result
 }
 
-func (v *VoiceIt) DeleteEnrollment(mail string, passwd string, enrollmentId string) string{
+func (v *VoiceIt) DeleteEnrollment(userId string, passwd string, enrollmentId string) string{
     hasher := sha256.New()
     client := &http.Client{}
     io.WriteString(hasher, passwd)
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("DELETE", "https://siv.voiceprintportal.com/sivservice/api/enrollments/"+enrollmentId, nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("PlatformID" , "24")
@@ -273,7 +206,7 @@ func (v *VoiceIt) DeleteEnrollment(mail string, passwd string, enrollmentId stri
 
 }
 
-func (v *VoiceIt) Authentication(mail string, passwd string, pathToAuthenticationWav string, confidence string,contentLanguage ... string) string {
+func (v *VoiceIt) Authentication(userId string, passwd string, pathToAuthenticationWav string,contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -290,10 +223,9 @@ func (v *VoiceIt) Authentication(mail string, passwd string, pathToAuthenticatio
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("POST", "https://siv.voiceprintportal.com/sivservice/api/authentications", bytes.NewReader(wavData))
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
-    req.Header.Add("VsitConfidence", confidence)
     req.Header.Add("ContentLanguage" , contentLang)
     req.Header.Add("PlatformID" , "24")
     resp, err := client.Do(req)
@@ -309,7 +241,7 @@ func (v *VoiceIt) Authentication(mail string, passwd string, pathToAuthenticatio
     return result
 }
 
-func (v *VoiceIt) AuthenticationByWavURL(mail string, passwd string, urlToAuthenticationWav string, confidence string, contentLanguage ... string) string {
+func (v *VoiceIt) AuthenticationByWavURL(userId string, passwd string, urlToAuthenticationWav string, contentLanguage ... string) string {
     hasher := sha256.New()
     contentLang :=""
     if len(contentLanguage) > 0 {
@@ -322,11 +254,10 @@ func (v *VoiceIt) AuthenticationByWavURL(mail string, passwd string, urlToAuthen
     shapass := hex.EncodeToString(hasher.Sum(nil))
     req, err := http.NewRequest("POST", "https://siv.voiceprintportal.com/sivservice/api/authentications/bywavurl", nil)
     req.Header.Add("Accept" , "application/json")
-    req.Header.Add("VsitEmail" , mail)
+    req.Header.Add("UserId" , userId)
     req.Header.Add("VsitPassword" , shapass)
     req.Header.Add("VsitDeveloperId" , v.devID)
     req.Header.Add("VsitwavURL", urlToAuthenticationWav)
-    req.Header.Add("VsitConfidence", confidence)
     req.Header.Add("ContentLanguage" , contentLang)
     req.Header.Add("PlatformID" , "24")
     resp, err := client.Do(req)
